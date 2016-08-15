@@ -1,0 +1,7 @@
+# setuptools is required by mock
+setuptools
+nose
+mock
+invoke
+Pygments
+robotframework
