@@ -1,5 +1,5 @@
 ## MRobot简介
-MRobot是蒙歌科技的web端自动化测试框架，基于Python并使用关键字驱动，扩展性强，拥有可读性较强的可视化UI界面及报告文档。
+    MRobot是蒙歌科技的web端自动化测试框架，基于Python并使用关键字驱动，扩展性强，拥有可读性较强的可视化UI界面及报告文档。
 ##环境安装
 ###安装Python
 下载地址：https://www.python.org/downloads/
