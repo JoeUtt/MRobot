@@ -1,0 +1,34 @@
+*** Settings ***
+Force Tags
+Library           requests
+Library           RequestsLibrary
+Library           Collections
+Resource          GetUserTokenKeyword.txt
+Library           DatabaseLibrary
+
+*** Variables ***
+${path}           /v1/order/info
+${password}       123456
+${username}       15927120187
+
+*** Test Cases ***
+全为有效值
+    [Tags]    smoke
+    [Template]
+    ${token}    GetUserToken    ${username}    ${password}
+    Import Library    ${CURDIR}/proto/out/GetOrderInfoResult/GetProtobufData.py
+    Create Session    api    http://qa.api.mengbuy.com
+    ${headers}    Create Dictionary    Authorization=Bearer ${token}
+    ${data}    Set Variable    orderId=1486706106534
+    ${result}    Get Request    api    ${path}?${data}    headers=${headers}
+    log    ${result.content}
+    Should Be Equal As Strings    ${result.status_code}    200    ${result.content}
+    ${ProtoResult}    GetProtoData    ${result.content}
+    ${returnData}    Set Variable    ${ProtoResult.data}
+    Should Be Equal As Strings    ${returnData.orderId}    1486706106534
+    Connect To Database Using Custom Params    pymysql    database='mgo_test', user='dbmaster', password='Mgt123456', host='rm-2ze2oj4662v5iv373o.mysql.rds.aliyuncs.com', port=3306,charset='utf8'
+    ${a}    query    select order_status from mgo_order where id='1486706106534'
+    Should Be Equal As Integers    ${a[0][0]}    8
+    Disconnect From Database
+
+*** Keywords ***

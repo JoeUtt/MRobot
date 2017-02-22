@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+
+ message GetGoodsCategoryResult {
+    int32 code = 1;
+    string error = 2;
+    string error_description = 3;
+    repeated Category data = 4;
+}
+
+message Category {
+    string categoryName = 1; //分类名称
+ repeated CategoryItem categoryItem = 2;
+}
+
+message CategoryItem {
+    string categoryName = 1; //分类名称
+ repeated CategoryInfo categoryInfo = 2;
+}
+
+message CategoryInfo {
+    string name = 1; //名称
+ string imageUrl = 2; //图片
+}

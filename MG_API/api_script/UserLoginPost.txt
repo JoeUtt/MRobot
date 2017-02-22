@@ -1,0 +1,28 @@
+*** Settings ***
+Force Tags
+Library           requests
+Library           RequestsLibrary
+Library           Collections
+Library           json
+
+*** Variables ***
+${path1}          /v2/access_token
+&{data1}          client_id=894b3f30082344dda81f085b4a9ae1a9    client_secret=04e3590db46543179e3b2c36fb4d68ad    username=15927120187    password=123456    grant_type=password
+&{headers1}       Content-Type=application/x-www-form-urlencoded
+
+*** Test Cases ***
+全为有效值
+    [Tags]    smoke
+    [Template]
+    Create Session    api    http://qa.auth.mengbuy.com
+    ${path}    Set Variable    /v2/access_token
+    ${headers}    Create Dictionary    Content-Type=application/x-www-form-urlencoded
+    ${data}    Create Dictionary    client_id=894b3f30082344dda81f085b4a9ae1a9    client_secret=04e3590db46543179e3b2c36fb4d68ad    username=15927120187    password=123456    grant_type=password
+    ${result}    Post Request    api    ${path}    headers=${headers}    data=${data}
+    log    ${result.content}
+    Should Be Equal As Strings    ${result.status_code}    200    ${result.content}
+    ${result_json}    To Json    ${result.content}
+    ${token}    Get From Dictionary    ${result_json}    access_token
+    Should Not Be Empty    ${token}
+
+*** Keywords ***

@@ -1,0 +1,14 @@
+*** Keywords ***
+GetUserToken
+    [Arguments]    ${username}    ${password}
+    Create Session    api    http://qa.auth.mengbuy.com
+    ${getUserPath}    Set Variable    /v2/access_token
+    ${getUserHeaders}    Create Dictionary    Content-Type=application/x-www-form-urlencoded
+    ${getUserData}    Create Dictionary    client_id=894b3f30082344dda81f085b4a9ae1a9    client_secret=04e3590db46543179e3b2c36fb4d68ad    username=${username}    password=${password}    grant_type=password
+    ${getUserResult}    Post Request    api    ${getUserPath}    headers=${getUserHeaders}    data=${getUserData}
+    log    ${getUserResult.content}
+    Should Be Equal As Strings    ${getUserResult.status_code}    200    ${getUserResult.content}
+    ${getUserResultJson}    To Json    ${getUserResult.content}
+    ${token}    Get From Dictionary    ${getUserResultJson}    access_token
+    Should Not Be Empty    ${token}
+    [Return]    ${token}

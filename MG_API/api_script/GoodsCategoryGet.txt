@@ -1,0 +1,26 @@
+*** Settings ***
+Force Tags
+Library           requests
+Library           RequestsLibrary
+Library           Collections
+Library           String
+
+*** Variables ***
+${path}           /v1/goods/category
+&{data}
+&{headers}
+
+*** Test Cases ***
+全为有效值
+    [Tags]    smoke
+    [Template]
+    Import Library    ${CURDIR}/proto/out/GetGoodsCategoryResult/GetProtobufData.py
+    Create Session    api    http://qa.api.mengbuy.com
+    ${result}    Get Request    api    ${path}    headers=${headers}
+    log    ${result.content}
+    Should Be Equal As Strings    ${result.status_code}    200    ${result.content}
+    ${ProtoResult}    GetProtoData    ${result.content}
+    ${data1}    Get From List    ${ProtoResult.data}    1
+    Should Be Equal As Strings    ${data1.categoryName}    生活家电2
+
+*** Keywords ***

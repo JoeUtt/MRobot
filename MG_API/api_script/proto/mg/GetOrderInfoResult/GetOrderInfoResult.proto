@@ -1,0 +1,126 @@
+syntax = "proto3";
+
+
+ message GetOrderInfoResult{
+   int32 code = 1;
+   string error = 2;
+   string error_description = 3;
+   OrderEntity data = 4;
+}
+
+message OrderEntity {
+   string orderId = 1;  //订单id
+ int32 orderStatus = 2; //订单状态
+ int64 createDate = 3;  //下单时间
+ double payPrice = 4;  //支付价格 最终支付价格
+ string deliveryId = 5; //物流单号
+ int32 deliveryType = 6; //配送方式
+ bool hasInvoice = 7; //提供发票
+ bool isRefund = 8;  //7天退款
+ int64 autoTakTime = 9; //自动收货时间
+ int64 autoCancelTime = 10; //付款有效期
+ DeliveryAddress deliveryAddress = 11; //收货详情
+ string payType = 12; //支付方式
+ string invoiceTitle = 13; //发票台头
+ double orderPrice = 14; //订单价格-不含优惠信息
+ double deliveryPrice = 15; //运费
+ repeated Preferential preferentials = 16; //优惠信息
+ repeated OrderItem orderItems = 17; //订单项
+ DeliveryInfo currentDelivery = 18; //当前物流信息
+ string payId  =19;   //交易支付流水号
+ OrderStatusInfo statusInfo = 20;   //订单状态信息
+ InvoiceType invoiceType = 21;    //发票类型
+}
+message DeliveryInfo {
+string acceptStation = 1; //物流信息，接收站
+int64 acceptTime = 2; //接收时间
+}
+message OrderStatusInfo {
+   OrderStatus orderStatus = 1;
+   RefundStatus refundStatus = 2;
+   CommentStatus commentStatus = 3;
+   TradeStatus tradeStatus = 4;
+}
+enum OrderStatus {
+   NOT_PAY = 0; //未支付
+ PAID = 1; //已支付
+ DELIVERY = 2; //已发货
+ TAKED = 3; //已收货
+ CANCEL = 4; //已关闭
+}
+enum RefundStatus {
+   NOT_REFUND = 0; //未退款
+ REFUNDING = 1; //退款中
+ REFUND = 2; //已退款
+}
+enum CommentStatus {
+   NOT_COMMENT = 0; //未评论
+ COMMENTED = 1; //已评论
+}
+enum TradeStatus {
+   TRADING = 0; //交易中
+ SUCCESSED = 1; //交易成功
+ CLOSED = 2; //交易关闭
+}
+
+enum InvoiceType {
+   PAPER = 0; //个人
+ COMPANY = 1; //公司
+}
+
+message DeliveryAddress {
+   string name = 1; //收货人姓名
+ string phone = 2; //收货人电话
+ string address = 3; //收货地址
+}
+
+message Preferential {
+   string name = 1; //优惠名称
+ double price = 2; //优惠金额
+}
+
+message OrderItem {
+   string id = 1; //商品id
+ string name = 2; //商品名称
+ string photo = 3; //图片
+ double price = 4; //商品价格
+ int32  number =5; //商品数量
+ repeated OrderItemSku skus = 6; //Sku属性集合
+ string skuCode = 7; //商品的skuCode
+ OrderRefundStatus refundStatus = 8; //售后状态
+ string refundId = 9; //售后id
+ bool isRefund = 10; //是否支持7天退货
+ bool hasInvoice = 11; //是否提供发票
+}
+
+
+
+message OrderItemSku{
+   string name = 1; //Sku名称
+ string value = 2; //Sku值
+}
+ 
+ 
+message OrderRefundEntity{
+string refundReason =1;
+double orderPrice = 2; //订单价格
+int32  number =3; //商品数量
+string remarks =4; //备注说明
+repeated string imageUrl =5; //上传图片
+OrderRefundStatus refundStatus = 6;   //售后状态
+int64 applyDime =7; //申请时间
+string refundId = 8; //售后id
+OrderItem orderItems = 9; //订单项
+ 
+double realPrice = 10; //实退金额
+
+}
+ 
+enum OrderRefundStatus {
+   ALLOW = 0;  //允许售后
+ ING = 1; //售后中
+ END = 2; //售后完成
+ CLOSE = 3; //取消
+ NOT_ALLOW = 4; //不可售后
+ APPLY = 5;  // 申请中
+}
